@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Главная страница</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+</head>
+<body>
+<!-- Вставка навигационной панели -->
+<div th:replace="~{/fragments/sidebar.html}"></div>
+
+<main>
+    <div th:replace="~{/fragments/header.html}"></div>
+
+    <br>
+
+    <div class="profile-header" th:text="#{label.home}">Home</div>
+
+    <div class="container">
+        <div class="full-page-center">
+            <h1 class="welcome-message">
+                <span th:text="#{label.welcome}">WELCOME BACK</span><br>
+                <span th:text="${user.firstName.toUpperCase()}">IVAN</span> 😄
+            </h1>
+        </div>
+    </div>
+
+</main>
+</body>
+</html>

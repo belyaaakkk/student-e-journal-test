@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{title.login}">Login</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/login.css}">
+</head>
+<body>
+<div class="login-container">
+    <button class="theme-toggle" id="theme-toggle" title="Toggle Theme">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="theme-icon">
+            <path d="M12 16a4 4 0 0 0 0-8 4 4 0 0 0 0 8zm0 2a6 6 0 1 1 0-12 6 6 0 0 1 0 12zm0-18a1 1 0 0 1 1 1v2a1 1 0 0 1-2 0V1a1 1 0 0 1 1-1zm0 20a1 1 0 0 1 1 1v2a1 1 0 0 1-2 0v-2a1 1 0 0 1 1-1zM4.93 4.93a1 1 0 0 1 1.414 0l1.414 1.414a1 1 0 0 1-1.414 1.414L4.93 6.344a1 1 0 0 1 0-1.414zm12.728 12.728a1 1 0 0 1 1.414 0l1.414 1.414a1 1 0 0 1-1.414 1.414l-1.414-1.414a1 1 0 0 1 0-1.414zM0 12a1 1 0 0 1 1-1h2a1 1 0 0 1 0 2H1a1 1 0 0 1-1-1zm20 0a1 1 0 0 1 1-1h2a1 1 0 0 1 0 2h-2a1 1 0 0 1-1-1zm-2.072-7.07a1 1 0 0 1 0 1.414l-1.414 1.414a1 1 0 0 1-1.414-1.414L16.516 4.93a1 1 0 0 1 1.414 0zm-12.728 12.728a1 1 0 0 1 0 1.414l-1.414 1.414a1 1 0 0 1-1.414-1.414l1.414-1.414a1 1 0 0 1 1.414 0z"/>
+        </svg>
+    </button>
+    <div class="login-header">
+        <h1 th:text="#{title.login}">Login</h1>
+    </div>
+
+    <div th:if="${param.error}" class="alert alert-error">
+        <span th:text="#{error.invalid.credentials}">Invalid username or password.</span>
+    </div>
+
+    <div th:if="${param.logout}" class="alert alert-success">
+        <span th:text="#{success.logout}">You have been logged out.</span>
+    </div>
+
+    <form th:action="@{/login}" method="post" class="login-form">
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+
+        <div class="input-group">
+            <label th:text="#{label.username}">Username</label>
+            <input type="text" id="username" name="username" th:placeholder="#{placeholder.username}" required>
+        </div>
+
+        <div class="input-group">
+            <label th:text="#{label.password}">Password</label>
+            <input type="password" id="password" name="password" th:placeholder="#{placeholder.password}" required>
+        </div>
+
+        <button type="submit" class="submit-button" th:text="#{button.login}">Login</button>
+    </form>
+</div>
+<script th:src="@{/js/theme.js}"></script>
+<script th:src="@{/js/login.js}"></script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5434/travel_agency
+    username: user
+    password: travel
+  jpa:
+    generate-ddl: true

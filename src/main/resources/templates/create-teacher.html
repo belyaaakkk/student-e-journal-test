@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Главная страница</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+</head>
+<body>
+<!-- Вставка навигационной панели -->
+<div th:replace="~{/fragments/sidebar.html}"></div>
+
+<main>
+    <div th:replace="~{/fragments/header.html}"></div>
+
+    <br>
+
+    <div class="profile-header">
+        <a th:href="@{/teachers}" class="back-arrow" title="Back">←</a>
+        <span th:text="#{label.add_teacher}">Create Teacher</span>
+    </div>
+
+    <div class="container">
+        <form th:action="@{/teachers/create}" method="post" th:object="${teacher}">
+            <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+            <!-- Ошибки валидации -->
+            <div data-th-if="${errors}" class="alert alert-error">
+                <ul>
+                    <li th:each="error : ${errors}" th:text="${error}"></li>
+                </ul>
+            </div>
+
+            <div class="profile-row">
+                <div class="input-group">
+                    <label th:text="#{label.first.name}">First Name</label>
+                    <input type="text" id="firstname" name="firstname" th:field="*{firstname}"
+                           placeholder="Enter first name">
+                </div>
+                <div class="input-group">
+                    <label th:text="#{label.last.name}">Last Name</label>
+                    <input type="text" id="lastname" name="lastname" th:field="*{lastname}"
+                           placeholder="Enter last name">
+                </div>
+            </div>
+
+            <div class="profile-row">
+                <div class="input-group">
+                    <label th:text="#{label.username}">Username</label>
+                    <input type="text" id="username" name="username" th:field="*{username}"
+                           placeholder="Enter username">
+                </div>
+            </div>
+
+            <div class="profile-row">
+                <div class="input-group">
+                    <label th:text="#{label.email}">Email</label>
+                    <input type="text" id="email" name="email" th:field="*{email}" placeholder="Enter email">
+                </div>
+                <div class="input-group">
+                    <label th:text="#{label.phone}">Phone</label>
+                    <input type="text" id="phoneNumber" name="phoneNumber" th:field="*{phoneNumber}"
+                           placeholder="Enter phone number">
+                </div>
+            </div>
+
+            <div class="profile-row">
+                <div class="input-group">
+                    <label th:text="#{label.subject}">Subject</label>
+                    <select name="subjectCode" th:field="*{subjectCode}">
+                        <option value="" disabled selected>Select subject</option>
+                        <option th:each="subject : ${subjects}"
+                                th:value="${subject.code}"
+                                th:text="#{${subject.messageKey}}"
+                                th:selected="${teacher.subjectCode == subject.code}">
+                        </option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label th:text="#{label.country}">Country</label>
+                    <div>
+                        <select name="countryCode" id="countryCode" th:field="*{countryCode}">
+                            <option value="" disabled selected>Select country</option>
+                            <option th:each="country : ${countries}"
+                                    th:value="${country.code}"
+                                    th:text="#{${country.messageKey}}">
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-row">
+                <div class="input-group">
+                    <label th:text="#{label.dob}">Date of Birth</label>
+                    <div>
+                        <input type="date" class="dob" id="dateOfBirth" name="dateOfBirth"
+                               th:field="*{dateOfBirth}" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Біографія -->
+            <div class="profile-row">
+                <div class="input-group">
+                    <label th:text="#{label.bio}">Bio</label>
+                    <div class="bio">
+                        <input type="text" class="bio-input" id="bio" name="bio" th:field="*{bio}"
+                               placeholder="Enter bio">
+                    </div>
+                </div>
+            </div>
+
+
+            <button type="submit" class="btn" th:text="#{button.save}">Save</button>
+
+        </form>
+
+    </div>
+</main>
+
+</body>
+</html>

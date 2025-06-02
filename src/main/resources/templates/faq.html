@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>FAQ - School Journal</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+</head>
+<body>
+<!-- Вставка навигационной панели -->
+<div th:replace="~{/fragments/sidebar.html}"></div>
+
+<main>
+    <div th:replace="~{/fragments/header.html}"></div>
+
+    <br>
+    <!-- Локализованный заголовок -->
+    <div class="profile-header" th:text="#{label.faq}">FAQ</div>
+
+    <div class="container">
+        <div class="faq-list">
+            <!-- Перебор всех вопросов и ответов с локализацией -->
+            <details class="faq-item" th:each="faq : ${faqs}">
+                <summary th:text="#{${faq.questionKey}}">Question Placeholder</summary>
+                <p th:text="#{${faq.answerKey}}">Answer Placeholder</p>
+            </details>
+        </div>
+    </div>
+</main>
+</body>
+</html>

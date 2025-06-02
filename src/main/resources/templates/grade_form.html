@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${editMode} ? 'Редактировать оценку' : 'Добавить оценку'">Grade Form</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{/fragments/sidebar.html}"></div>
+
+<main>
+    <div th:replace="~{/fragments/header.html}"></div>
+    <br>
+
+    <div class="profile-header">
+        <a th:href="@{/grades}" class="back-arrow" title="Back">←</a>
+        <span th:text="${editMode} ? 'Редактировать оценку' : 'Добавить оценку'">Grade</span>
+    </div>
+
+    <div class="container">
+        <form th:action="${editMode} ? @{'/grades/edit/' + ${gradeId}} : @{/grades/add}"
+              th:object="${gradeForm}" method="post">
+
+            <label>Ученик:
+                <select th:field="*{studentId}" required th:disabled="${editMode}">
+                    <option th:each="s : ${students}" th:value="${s.id}"
+                            th:text="${s.user.firstname + ' ' + s.user.lastname}"
+                            th:selected="${s.id == gradeForm.studentId}"></option>
+                </select>
+            </label>
+
+            <input type="hidden" th:field="*{teacherId}" />
+
+            <label>Предмет:
+                <select th:field="*{subjectId}" required th:disabled="${editMode}">
+                    <option th:each="sub : ${subjects}" th:value="${sub.id}"
+                            th:text="${sub.messageKey}"
+                            th:selected="${sub.id == gradeForm.subjectId}"></option>
+                </select>
+            </label>
+
+            <label>Оценка:
+                <input type="number" th:field="*{score}" min="0" max="100" required />
+            </label>
+
+            <label>Дата:
+                <input type="date" th:field="*{date}" required />
+            </label>
+
+            <label>Комментарий:
+                <textarea th:field="*{comment}"></textarea>
+            </label>
+
+            <button type="submit" th:text="${editMode} ? 'Сохранить' : 'Добавить'">Сохранить</button>
+        </form>
+    </div>
+</main>
+</body>
+</html>

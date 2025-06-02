@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Главная страница</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+</head>
+<body>
+<!-- Вставка навигационной панели -->
+<div th:replace="~{/fragments/sidebar.html}"></div>
+
+<main>
+    <div th:replace="~{/fragments/header.html}"></div>
+
+    <br>
+
+    <div class="profile-header" th:text="#{label.profile}">Profile</div>
+
+    <div class="container">
+        <div class="profile-row">
+            <div class="input-group">
+                <label th:text="#{label.first.name}">First Name:</label>
+                <input type="text" id="firstname" name="firstname" th:value="${user.firstName}" readonly>
+            </div>
+            <div class="input-group">
+                <label th:text="#{label.last.name}">Last Name</label>
+                <input type="text" id="lastname" name="lastname" th:value="${user.lastName}" readonly>
+            </div>
+        </div>
+
+        <div class="profile-row">
+            <div class="input-group">
+                <label th:text="#{label.email}">Email</label>
+                <input type="text" id="email" name="email" th:value="${user.email}" readonly>
+            </div>
+            <div class="input-group">
+                <label th:text="#{label.phone}">Phone</label>
+                <input type="text" id="phone" name="phone" th:value="${user.phoneNumber}" readonly>
+            </div>
+        </div>
+
+        <div class="profile-row">
+            <div class="input-group">
+                <label th:text="#{label.dob}">Date of Birth</label>
+                <input type="date" id="dateOfBirth" name="dateOfBirth" th:value="${user.dateOfBirth}" readonly>
+            </div>
+            <div class="input-group">
+                <label th:text="#{label.country}">Country</label>
+                <input type="text" id="country" name="country"
+                       th:with="countryKey=${user.countryCode.toLowerCase()}"
+                       th:value="#{${countryKey}}"
+                       readonly>
+            </div>
+        </div>
+
+        <!-- Биография -->
+        <div class="profile-row">
+            <div class="input-group">
+                <label th:text="#{label.bio}">Bio</label>
+                <input type="text" id="bio" name="bio" th:value="${user.bio}" readonly>
+            </div>
+        </div>
+
+        <a th:href="@{/profile/edit}" class="button-link" th:text="#{label.edit}">Edit</a>
+
+    </div>
+</main>
+
+</body>
+</html>

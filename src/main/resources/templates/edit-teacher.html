@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Главная страница</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+</head>
+<body>
+<!-- Вставка навигационной панели -->
+<div th:replace="~{/fragments/sidebar.html}"></div>
+
+<main>
+    <div th:replace="~{/fragments/header.html}"></div>
+
+    <br>
+
+    <div class="profile-header">
+        <a th:href="@{/teachers/{id}(id=${teacher.id})}" class="back-arrow" title="Back">←</a>
+        <span th:text="#{label.teacher.edit_info}">Edit Teacher Information</span>
+    </div>
+    <div class="container">
+        <form th:action="@{/teachers/{teacherId}/edit(teacherId=${teacher.id})}" method="post" th:object="${teacher}">
+            <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+            <div>
+                <img height="500" width="500"
+                     th:src="${teacher.photoUrl != null} ? @{${teacher.photoUrl}} : @{/images/default-avatar.png}"
+                     alt="Teacher Photo" class="personal-photo">
+            </div>
+            <div class="input-group">
+                <label th:text="#{label.first.name}">First Name</label>
+                <input type="text" id="firstname" name="firstname" th:value="${teacher.firstname}">
+            </div>
+            <div class="input-group">
+                <label th:text="#{label.last.name}">Last Name</label>
+                <input type="text" id="lastname" name="lastname" th:value="${teacher.lastname}">
+            </div>
+            <div class="input-group">
+                <label th:text="#{label.email}">Email</label>
+                <input type="text" id="email" name="email" th:value="${teacher.email}">
+            </div>
+            <div class="input-group">
+                <label th:text="#{label.phone}">Phone</label>
+                <input type="text" id="phoneNumber" name="phoneNumber" th:value="${teacher.phoneNumber}">
+            </div>
+            <div class="input-group">
+                <label th:text="#{label.subject}">Subject</label>
+                <select name="subject">
+                    <option th:each="subject : ${subjects}"
+                            th:value="${subject}"
+                            th:text="#{${subject.messageKey}}"
+                            th:selected="${teacher.subjectCode}">
+                    </option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label th:text="#{label.bio}">Bio</label>
+                <input type="text" id="bio" name="bio" th:value="${teacher.bio}">
+            </div>
+
+            <button type="submit" class="btn" th:text="#{button.save}">Save</button>
+
+        </form>
+    </div>
+</main>
+
+</body>
+</html>

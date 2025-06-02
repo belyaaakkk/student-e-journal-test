@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>School Calendar</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.5/main.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.5/main.min.js"></script>
+    <style>
+        #event-card, #no-events {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        #event-card.show, #no-events.show {
+            display: block;
+        }
+
+        .event-item {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .label {
+            font-weight: bold;
+        }
+
+        #close-card {
+            margin-top: 10px;
+            padding: 5px 10px;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="~{/fragments/sidebar.html}"></div>
+
+<main>
+    <div th:replace="~{/fragments/header.html}"></div>
+
+    <br>
+
+    <div class="profile-header" th:text="#{label.calendar}">Calendar</div>
+
+    <div class="container">
+        <!-- Admin class filter -->
+        <div sec:authorize="hasRole('ADMIN')" class="class-filter">
+            <label for="class-select">Filter by Class:</label>
+            <select id="class-select"
+                    onchange="window.location.href='/calendar?month=' + document.getElementById('current-month').value + '&classId=' + this.value">
+                <option value="">All Classes</option>
+                <option th:each="schoolClass : ${classes}"
+                        th:value="${schoolClass.id}"
+                        th:text="${schoolClass.name}"></option>
+            </select>
+            <input type="hidden" id="current-month" th:value="${currentMonth}"/>
+        </div>
+
+        <div id="calendar"></div>
+
+        <!-- Event card for selected day -->
+        <div id="event-card">
+            <h3 id="card-date">Selected Date</h3>
+            <div id="event-content"></div>
+            <button id="close-card">Close</button>
+        </div>
+        <div class="no-events" id="no-events" th:text="'No events found for this day'"></div>
+
+        <script th:inline="javascript">
+            document.addEventListener('DOMContentLoaded', function () {
+                try {
+                    const events = /*[[${events}]]*/ [];
+                    console.log('Raw events data:', events);
+
+                    const mappedEvents = events.map(event => {
+                        console.log('Processing event:', event);
+                        return {
+                            id: event.id,
+                            title: event.title || 'Untitled Event',
+                            start: event.startDate ? new Date(event.startDate).toISOString() : null,
+                            end: event.endDate ? new Date(event.endDate).toISOString() : null,
+                            className: 'event-' + (event.eventType ? event.eventType.toLowerCase() : 'unknown'),
+                            extendedProps: {
+                                description: event.description || 'No description',
+                                teacher: event.teacherName || 'N/A',
+                                subject: event.subjectCode || 'N/A',
+                                eventType: event.eventType || 'UNKNOWN',
+                                className: event.className || 'N/A',
+                                room: event.room || 'N/A',
+                                homeworkId: event.homeworkId || null,
+                                homeworkStatus: event.homeworkStatus || 'N/A'
+                            }
+                        };
+                    }).filter(event => event.start && event.end);
+
+                    console.log('Mapped events:', mappedEvents);
+
+                    const calendarEl = document.getElementById('calendar');
+                    const eventCard = document.getElementById('event-card');
+                    const cardDate = document.getElementById('card-date');
+                    const eventContent = document.getElementById('event-content');
+                    const noEvents = document.getElementById('no-events');
+                    const closeCard = document.getElementById('close-card');
+
+                    if (!calendarEl) {
+                        console.error('Calendar element not found');
+                        return;
+                    }
+
+                    const calendar = new FullCalendar.Calendar(calendarEl, {
+                        initialView: 'dayGridMonth',
+                        events: mappedEvents,
+                        eventClick: function (info) {
+                            const props = info.event.extendedProps;
+                            let details = `Title: ${info.event.title}\n` +
+                                `Type: ${props.eventType}\n` +
+                                `Subject: ${props.subject}\n` +
+                                `Teacher: ${props.teacher}\n` +
+                                `Class: ${props.className}\n` +
+                                `Description: ${props.description}`;
+                            if (props.eventType === 'HOMEWORK') {
+                                details += `\nHomework Status: ${props.homeworkStatus}`;
+                            } else if (props.eventType !== 'HOMEWORK' && props.room !== 'N/A') {
+                                details += `\nRoom: ${props.room}`;
+                            }
+                            alert(details);
+                        },
+                        dateClick: function (info) {
+                            const clickedDate = info.dateStr;
+                            console.log('Clicked date:', clickedDate);
+
+                            // Hide card and no-events message
+                            eventCard.classList.remove('show');
+                            noEvents.classList.remove('show');
+
+                            // Filter events for the clicked date
+                            const eventsOnDate = mappedEvents.filter(event => {
+                                const eventDate = new Date(event.start).toISOString().split('T')[0];
+                                return eventDate === clickedDate;
+                            });
+
+                            console.log('Events on date:', eventsOnDate);
+
+                            // Update card content
+                            cardDate.textContent = `Events on ${new Date(clickedDate).toLocaleDateString('en-US', {
+                                weekday: 'long',
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric'
+                            })}`;
+                            if (eventsOnDate.length > 0) {
+                                eventContent.innerHTML = eventsOnDate.map(event => {
+                                    let content = `
+                                        <div class="event-item">
+                                            <p><span class="label">Title:</span> ${event.title}</p>
+                                            <p><span class="label">Type:</span> ${event.extendedProps.eventType}</p>
+                                            <p><span class="label">Start:</span> ${new Date(event.start).toLocaleString()}</p>
+                                            <p><span class="label">End:</span> ${new Date(event.end).toLocaleString()}</p>
+                                            <p><span class="label">Class:</span> ${event.extendedProps.className}</p>
+                                            <p><span class="label">Subject:</span> ${event.extendedProps.subject}</p>
+                                            <p><span class="label">Teacher:</span> ${event.extendedProps.teacher}</p>`;
+                                    if (event.extendedProps.eventType === 'HOMEWORK') {
+                                        content += `<p><span class="label">Homework Status:</span> ${event.extendedProps.homeworkStatus}</p>`;
+                                    } else if (event.extendedProps.room !== 'N/A') {
+                                        content += `<p><span class="label">Room:</span> ${event.extendedProps.room}</p>`;
+                                    }
+                                    content += `<p><span class="label">Description:</span> ${event.extendedProps.description}</p></div>`;
+                                    return content;
+                                }).join('');
+                                eventCard.classList.add('show');
+                            } else {
+                                noEvents.classList.add('show');
+                            }
+                        }
+                    });
+                    calendar.render();
+
+                    // Close card button handler
+                    closeCard.addEventListener('click', function () {
+                        eventCard.classList.remove('show');
+                    });
+                } catch (e) {
+                    console.error('Error initializing calendar:', e);
+                }
+            });
+        </script>
+    </div>
+</main>
+</body>
+</html>

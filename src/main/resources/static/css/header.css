@@ -1,0 +1,175 @@
+/* Section header styling */
+.section-header {
+    padding: 10px 15px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--secondary-text-clr);
+    margin-top: 20px;
+    letter-spacing: 1px;
+    transition: opacity 300ms ease-in-out, height 300ms ease-in-out, margin 300ms ease-in-out, padding 300ms ease-in-out;
+}
+
+
+.main-header {
+    border-radius: 1em;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    background-color: var(--base-clr);
+    padding: 1em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+
+.search-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    background-color: transparent;
+    border: none;
+    border-bottom: 2px solid #5e63ff;
+    border-radius: 0;
+    padding: 0.75em 1em;
+    flex-grow: 1;
+    max-width: 400px;
+}
+
+.search-container svg {
+    width: 24px;
+    height: 24px;
+}
+
+.search-container:focus-within svg {
+    fill: #ffffff; /* White fill when input is focused */
+}
+
+.search-input {
+    background: none;
+    border: none;
+    color: var(--text-clr);
+    font-size: 1rem;
+    font-family: Poppins, sans-serif;
+    flex-grow: 1;
+    outline: none;
+}
+
+.search-input::placeholder {
+    color: var(--text-clr);
+    opacity: 0.7;
+    font-style: italic;
+}
+
+.search-input:focus {
+    outline: none;
+    border: none;
+}
+
+/* Header-right container for alignment */
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 1.5em; /* Reduced gap for tighter spacing */
+}
+
+/* Language selector styling */
+.language-selector {
+    display: flex;
+}
+
+.lang-link {
+    width: 56px; /* Fixed size to match dropdown-btn */
+    height: 56px; /* Fixed size to match dropdown-btn */
+    border-radius: .5em;
+    padding: 0; /* Remove padding since we’re using fixed dimensions */
+    text-decoration: none;
+    color: var(--text-clr); /* Changed to white for consistency */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 200ms ease-in-out, color 200ms ease-in-out;
+}
+
+.lang-link:hover {
+    background-color: var(--hover-clr);
+}
+
+.lang-link.active {
+    color: var(--accent-clr);
+}
+
+.main-header .dropdown-container {
+    position: relative;
+}
+
+.main-header .dropdown-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.75em; /* Increased gap */
+    background: none;
+    border: none;
+    border-radius: 0.5em;
+    padding: 0.75em; /* Increased padding */
+    cursor: pointer;
+    transition: background-color 300ms ease-in-out;
+}
+
+.main-header .dropdown-btn:hover {
+    background-color: var(--hover-clr);
+}
+
+.main-header .dropdown-btn img {
+    width: 32px; /* Increased size */
+    height: 32px; /* Increased size */
+    filter: brightness(0) saturate(100%) invert(93%) sepia(6%) saturate(135%) hue-rotate(169deg) brightness(103%) contrast(92%); /* Matches #e8eaed */
+}
+
+.main-header .dropdown-btn svg {
+    width: 32px; /* Increased size */
+    height: 32px; /* Increased size */
+    fill: var(--text-clr);
+    transition: transform 200ms ease;
+}
+
+.main-header .dropdown-btn.rotate svg {
+    transform: rotate(180deg);
+}
+
+.main-header .sub-menu {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 300ms ease-in-out;
+    overflow: hidden;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: var(--base-clr);
+    border-radius: 0.5em;
+    z-index: 20;
+    min-width: 120px;
+}
+
+.main-header .sub-menu.show {
+    grid-template-rows: 1fr;
+}
+
+.main-header .sub-menu > div {
+    overflow: hidden;
+}
+
+.main-header .sub-menu a {
+    display: block;
+    padding: 0.85em;
+    color: var(--text-clr);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: background-color 300ms ease-in-out;
+}
+
+.main-header .sub-menu a:hover {
+    background-color: var(--hover-clr);
+}

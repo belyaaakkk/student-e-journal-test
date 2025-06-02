@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Главная страница</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+</head>
+<body>
+<!-- Вставка навигационной панели -->
+<div th:replace="~{/fragments/sidebar.html}"></div>
+
+<main>
+    <div th:replace="~{/fragments/header.html}"></div>
+
+    <br>
+
+    <div class="profile-header">
+        <a th:href="@{/students/{id}(id=${student.id})}" class="back-arrow" title="Back">←</a>
+        <span th:text="#{label.edit_student}">Edit Profile</span>
+    </div>
+
+    <div class="container">
+        <form th:action="@{/students/{studentId}/edit(studentId=${student.id})}" method="post" th:object="${student}">
+            <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+            <!-- Ошибки валидации -->
+            <div data-th-if="${errors}" class="alert alert-error">
+                <ul>
+                    <li th:each="error : ${errors}" th:text="${error}"></li>
+                </ul>
+            </div>
+
+            <div class="profile-row">
+                <div class="input-group">
+                    <label th:text="#{label.first.name}">First Name</label>
+                    <input type="text" id="firstname" name="firstName" th:value="${student.firstName}">
+                </div>
+                <div class="input-group">
+                    <label th:text="#{label.last.name}">Last Name</label>
+                    <input type="text" id="lastname" name="lastName" th:value="${student.lastName}">
+                </div>
+            </div>
+
+            <div class="profile-row">
+                <div class="input-group">
+                    <label th:text="#{label.email}">Email</label>
+                    <input type="text" id="email" name="email" th:value="${student.email}">
+                </div>
+                <div class="input-group">
+                    <label th:text="#{label.phone}">Phone</label>
+                    <input type="text" id="phoneNumber" name="phoneNumber" th:value="${student.phoneNumber}">
+                </div>
+            </div>
+
+            <div class="profile-row">
+                <div class="input-group">
+                    <label th:text="#{label.dob}">Date of Birth</label>
+                    <input type="date" id="dateOfBirth" name="dateOfBirth" th:value="${student.dateOfBirth}">
+                </div>
+                <div class="input-group">
+                    <label th:text="#{label.enrollment_date}">Enrollment Date</label>
+                    <input type="date" id="enrollmentDate" name="enrollmentDate" th:value="${student.enrollmentDate}">
+                </div>
+            </div>
+
+            <div class="profile-row">
+                <div class="input-group">
+                    <label th:text="#{label.class}">Class</label>
+                    <div>
+                        <select name="countryCode" id="classCode" th:field="*{classCode}">
+                            <option th:each="classCode : ${classNames}"
+                                    th:value="${classCode}"
+                                    th:text="${classCode}"
+                                    th:selected="${student.classCode == classCode}">
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-row">
+                <div class="input-group">
+                    <label th:text="#{label.bio}">Bio</label>
+                    <input type="text" id="bio" name="bio" th:value="${student.bio}">
+                </div>
+            </div>
+
+            <button type="submit" class="btn" th:text="#{button.save}">Save</button>
+        </form>
+    </div>
+</main>
+
+</body>
+</html>

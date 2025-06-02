@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/header.css}">
+</head>
+<body>
+<div th:fragment="header">
+    <header class="main-header">
+        <div class="search-container">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                <path fill="none" stroke="#b0b3c1" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="m15 15l6 6m-11-4a7 7 0 1 1 0-14a7 7 0 0 1 0 14Z"/>
+            </svg>
+            <input type="text" th:placeholder="#{nav.search}" class="search-input">
+        </div>
+        <div class="header-right">
+            <button class="theme-toggle" id="theme-toggle" title="Toggle Theme">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="theme-icon">
+                    <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4V2m0 18v2M6.414 6.414L5 5m12.728 12.728l1.414 1.414M4 12H2m18 0h2m-4.271-5.586L19.143 5M6.415 17.728L5 19.142M12 17a5 5 0 1 1 0-10a5 5 0 0 1 0 10Z"/>                </svg>
+            </button>
+            <div class="language-selector">
+                <a href="?lang=ua" class="lang-link" data-lang="ua">UA</a>
+                <a href="?lang=en" class="lang-link" data-lang="en">ENG</a>
+            </div>
+
+            <div class="auth-section" sec:authorize="isAnonymous()">
+                <a th:href="@{/login}" class="login-button" th:text="#{nav.login}">Login</a>
+            </div>
+
+            <div class="dropdown-container" sec:authorize="isAuthenticated()">
+                <button onclick="toggleSubMenu(this)" class="dropdown-btn">
+                    <img th:src="@{/images/user-circle.svg}" alt="Profile Icon" width="24" height="24">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                         fill="#e8eaed">
+                        <path d="M480-361q-8 0-15-2.5t-13-8.5L268-556q-11-11-11-28t11-28q11-11 28-11t28 11l156 156 156-156q11-11 28-11t28 11q11 11 11 28t-11 28L508-372q-6 6-13 8.5t-15 2.5Z"/>
+                    </svg>
+                </button>
+                <ul class="sub-menu">
+                    <div>
+                        <li><a th:href="@{/profile}" th:text="#{nav.profile}">Profile</a></li>
+                        <li><a th:href="@{/settings}" th:text="#{nav.settings}">Settings</a></li>
+                        <li><a th:href="@{/login?logout}" th:text="#{nav.logout}">Logout</a></li>
+                    </div>
+                </ul>
+            </div>
+        </div>
+    </header>
+</div>
+<script th:src="@{/js/header.js}"></script>
+<script th:src="@{/js/theme.js}"></script>
+</body>
+</html>

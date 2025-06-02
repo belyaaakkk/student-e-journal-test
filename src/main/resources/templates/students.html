@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Главная страница</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+</head>
+<body>
+<!-- Вставка навигационной панели -->
+<div th:replace="~{/fragments/sidebar.html}"></div>
+
+<main>
+    <div th:replace="~{/fragments/header.html}"></div>
+
+    <br>
+
+    <div class="profile-header" th:text="#{label.students}">List of Students</div>
+
+    <div class="container">
+
+        <form method="get" th:action="@{/students}">
+            <div class="profile-row">
+                <div>
+                    <label for="classFilter" th:text="#{label.filter_by_status}">Filter by class:</label>
+                    <select name="classFilter" id="classFilter">
+                        <option value="" th:text="#{label.all}">All</option>
+                        <option th:each="className : ${allClasses}"
+                                th:value="${className}"
+                                th:text="${className}"
+                                th:selected="${className == classFilter}">
+                        </option>
+                    </select>
+                </div>
+                <button type="submit" class="button-filter" th:text="#{label.filter}">Filter</button>
+                <a th:href="@{/students/create}" class="button-filter" th:text="#{label.add_student}"
+                   sec:authorize="hasAuthority('ADMIN') or hasAuthority('TEACHER')">
+                    Add Student
+                </a>
+                </div>
+
+            <!-- Скрытые поля для сохранения сортировки при фильтрации -->
+            <input type="hidden" name="sortField" th:value="${sortField}">
+            <input type="hidden" name="sortDirection" th:value="${sortDirection}">
+            <br>
+        </form>
+
+        <table>
+            <thead>
+            <tr>
+                <th>№</th>
+                <th>
+                    <a th:href="@{/students(
+                        sortField='user.lastname',
+                        sortDirection=${sortDirection == 'asc' ? 'desc' : 'asc'},
+                        classFilter=${classFilter}
+                    )}" th:text="#{label.last.name}">Lastname</a>
+                    <span class="sort-arrow"
+                          th:classappend="${sortField == 'user.lastname' ? (sortDirection == 'asc' ? 'asc' : 'desc') : ''}">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="16px" viewBox="0 -960 960 960" width="16px"
+                             fill="var(--text-clr)">
+                            <path d="M480-361q-8 0-15-2.5t-13-8.5L268-556q-11-11-11-28t11-28q11-11 28-11t28 11l156 156 156-156q11-11 28-11t28 11q11 11 11 28t-11 28L508-372q-6 6-13 8.5t-15 2.5Z"/>
+                        </svg>
+                    </span>
+                </th>
+                <th th:text="#{label.first.name}">Firstname</th>
+                <th th:text="#{label.class}">Class</th>
+                <th th:text="#{label.enrollment_date}">Enrollment</th>
+                <th th:text="#{label.profile}">Profile</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${#lists.isEmpty(students)}">
+                <td colspan="6" th:text="#{label.no.students}">No students found</td>
+            </tr>
+            <tr th:each="student, iterStat : ${students}">
+                <td th:text="${studentsPage.number * studentsPage.size + iterStat.index + 1}">1</td>
+                <td th:text="${student.lastName}">Last Name</td>
+                <td th:text="${student.firstName}">First Name</td>
+                <td th:text="${student.classCode}">8-А</td>
+                <td th:text="${#temporals.format(student.enrollmentDate, 'dd MMM, yyyy')}">03 May, 2025</td>
+                <td>
+                    <a class="profile-link" th:href="@{'/students/' + ${student.id}}"
+                       th:text="#{label.profile}">Profile</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- Пагинация -->
+        <div class="pagination" th:if="${studentsPage.totalPages > 1}">
+            <ul>
+                <li th:if="${studentsPage.hasPrevious()}">
+                    <a th:href="@{/students(
+                        page=${studentsPage.number - 1},
+                        sortField=${sortField},
+                        sortDirection=${sortDirection},
+                        classFilter=${classFilter}
+                    )}">←</a>
+                </li>
+
+                <li th:each="i : ${#numbers.sequence(0, studentsPage.totalPages - 1)}"
+                    th:classappend="${i == studentsPage.number} ? 'active'">
+                    <a th:href="@{/students(
+                        page=${i},
+                        sortField=${sortField},
+                        sortDirection=${sortDirection},
+                        classFilter=${classFilter}
+                    )}" th:text="${i + 1}">1</a>
+                </li>
+
+                <li th:if="${studentsPage.hasNext()}">
+                    <a th:href="@{/students(
+                        page=${studentsPage.number + 1},
+                        sortField=${sortField},
+                        sortDirection=${sortDirection},
+                        classFilter=${classFilter}
+                    )}">→</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</main>
+
+</body>
+</html>

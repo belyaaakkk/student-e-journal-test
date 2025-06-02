@@ -1,0 +1,217 @@
+.messages-container {
+    display: flex;
+    gap: 1em;
+    height: 70vh;
+    overflow: hidden;
+}
+
+.conversations-sidebar {
+    flex: 0 0 30%;
+    background-color: var(--line-clr);
+    border-radius: 0.5em;
+    padding: 1em;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    overflow-y: auto;
+}
+
+.conversations-sidebar h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-clr);
+    margin-bottom: 1em;
+}
+
+.conversation-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+}
+
+.conversation-preview {
+    display: flex;
+    align-items: center;
+    padding: 0.75em;
+    border-radius: 0.5em;
+    background-color: var(--base-clr);
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.conversation-preview:hover {
+    background-color: var(--hover-clr);
+    border: 2px solid var(--accent-clr);
+    box-shadow: 0 4px 12px rgba(94, 99, 255, 0.2);
+}
+
+.conversation-preview.unread {
+    background-color: var(--hover-clr);
+}
+
+.user-photo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 0.75em;
+}
+
+.conversation-info {
+    flex: 1;
+}
+
+.conversation-info h4 {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-clr);
+    margin-bottom: 0.25em;
+}
+
+.conversation-info p {
+    font-size: 0.85rem;
+    color: var(--secondary-text-clr);
+    margin-bottom: 0.25em;
+    line-height: 1.4;
+}
+
+.conversation-info .timestamp {
+    font-size: 0.8rem;
+    color: var(--secondary-text-clr);
+}
+
+.no-conversations, .no-selection {
+    text-align: center;
+    color: var(--secondary-text-clr);
+    font-size: 0.95rem;
+    padding: 2em;
+}
+
+.messages-area {
+    flex: 1;
+    background-color: var(--line-clr);
+    border-radius: 0.5em;
+    padding: 1em;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+}
+
+.conversation-header {
+    display: flex;
+    align-items: center;
+    padding-bottom: 1em;
+    border-bottom: 1px solid var(--line-clr);
+    margin-bottom: 1em;
+}
+
+.conversation-header h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-clr);
+}
+
+.messages-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0.5em;
+}
+
+.message {
+    margin-bottom: 1em;
+    display: flex;
+}
+
+.message.sent {
+    justify-content: flex-end;
+}
+
+.message.received {
+    justify-content: flex-start;
+}
+
+.message-content {
+    max-width: 70%;
+    padding: 0.75em;
+    border-radius: 0.5em;
+    background-color: var(--base-clr);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.message.sent .message-content {
+    background-color: var(--accent-clr);
+    color: #fff;
+}
+
+.message.received .message-content {
+    background-color: var(--hover-clr);
+    color: var(--text-clr);
+}
+
+.message-content p {
+    font-size: 0.95rem;
+    margin-bottom: 0.5em;
+    line-height: 1.5;
+}
+
+.message-content .timestamp {
+    font-size: 0.8rem;
+    color: var(--secondary-text-clr);
+    text-align: right;
+    display: block;
+}
+
+.message.sent .message-content .timestamp {
+    color: #e6e6e6;
+}
+
+.message-form {
+    margin-top: 1em;
+    padding-top: 1em;
+    border-top: 1px solid var(--line-clr);
+}
+
+.message-form .input-group {
+    display: flex;
+    gap: 0.5em;
+    align-items: flex-end;
+}
+
+.message-form textarea {
+    flex: 1;
+    font-size: 0.95rem;
+    font-family: 'Poppins', sans-serif;
+    padding: 0.75em;
+    border-radius: 0.5em;
+    background-color: var(--base-clr);
+    color: var(--text-clr);
+    outline: none;
+    border: 2px solid transparent;
+    transition: border 0.3s ease, box-shadow 0.3s ease;
+    resize: vertical;
+    min-height: 3em;
+    max-height: 10em;
+}
+
+.message-form textarea:hover, .message-form textarea:focus {
+    border: 2px solid var(--accent-clr);
+    box-shadow: 0 4px 12px rgba(94, 99, 255, 0.2);
+}
+
+.message-form .btn {
+    width: auto;
+    padding: 0.75em 1.5em;
+}
+
+@media (max-width: 768px) {
+    .messages-container {
+        flex-direction: column;
+        height: auto;
+    }
+    .conversations-sidebar {
+        flex: 0 0 auto;
+        max-height: 40vh;
+    }
+    .messages-area {
+        flex: 1;
+    }
+}
