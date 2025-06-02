@@ -21,37 +21,52 @@
         <form th:action="${editMode} ? @{'/grades/edit/' + ${gradeId}} : @{/grades/add}"
               th:object="${gradeForm}" method="post">
 
-            <label>Ученик:
-                <select th:field="*{studentId}" required th:disabled="${editMode}">
-                    <option th:each="s : ${students}" th:value="${s.id}"
-                            th:text="${s.user.firstname + ' ' + s.user.lastname}"
-                            th:selected="${s.id == gradeForm.studentId}"></option>
-                </select>
-            </label>
+            <div class="profile-row">
+                <div class="input-group">
+                    <label th:text="#{label.student.name}">Учень</label>
+                    <div>
+                        <select th:field="*{studentId}" required>
+                            <option th:each="s : ${students}" th:value="${s.id}"
+                                    th:text="${s.user.firstname + ' ' + s.user.lastname}"></option>
+                        </select>
+                    </div>
+                </div>
+            </div>
 
-            <input type="hidden" th:field="*{teacherId}" />
+            <input type="hidden" th:field="*{teacherId}"/>
 
-            <label>Предмет:
-                <select th:field="*{subjectId}" required th:disabled="${editMode}">
-                    <option th:each="sub : ${subjects}" th:value="${sub.id}"
-                            th:text="${sub.messageKey}"
-                            th:selected="${sub.id == gradeForm.subjectId}"></option>
-                </select>
-            </label>
+            <div class="profile-row">
+                <div class="input-group">
+                    <label th:text="#{label.subject}">Subject</label>
+                    <select th:field="*{subjectId}" required>
+                        <option th:each="sub : ${subjects}" th:value="${sub.id}" th:text="#{${sub.messageKey}}"></option>
+                    </select>
+                </div>
+            </div>
 
-            <label>Оценка:
-                <input type="number" th:field="*{score}" min="0" max="100" required />
-            </label>
+            <div class="profile-row">
+                <div class="input-group">
+                    <label th:text="#{label.grade.value}">Grade</label>
+                    <input type="number" th:field="*{score}" min="0" max="100" required/>
+                </div>
+            </div>
 
-            <label>Дата:
-                <input type="date" th:field="*{date}" required />
-            </label>
+            <div class="profile-row">
+                <div class="input-group">
+                    <label th:text="#{label.date}">Date</label>
+                    <input type="date" th:field="*{date}" required/>
+                </div>
+            </div>
 
-            <label>Комментарий:
-                <textarea th:field="*{comment}"></textarea>
-            </label>
 
-            <button type="submit" th:text="${editMode} ? 'Сохранить' : 'Добавить'">Сохранить</button>
+            <div class="profile-row">
+                <div class="input-group">
+                    <label th:text="#{label.comment}">Bio</label>
+                    <input type="text" class="bio-input" th:field="*{comment}">
+                </div>
+            </div>
+
+            <button type="submit" class="btn" th:text="${editMode} ? 'Сохранить' : 'Добавить'">Сохранить</button>
         </form>
     </div>
 </main>

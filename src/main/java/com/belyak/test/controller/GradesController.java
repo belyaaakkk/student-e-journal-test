@@ -100,6 +100,26 @@ public class GradesController {
         return "redirect:/grades";
     }
 
+    @PostMapping("/delete/{id}")
+    public String deleteGrade(@PathVariable Long id, @AuthenticationPrincipal UserDetails userDetails) {
+        User currentUser = (User) userDetails;
+
+        Grade grade = gradeService.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Grade not found"));
+
+        // Удалять может только автор оценки (учитель) или админ
+        if (currentUser.getRole().equals(Role.TEACHER)) {
+            if (!grade.getTeacher().getUser().getUsername().equals(currentUser.getUsername())) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not allowed to delete this grade");
+            }
+        } else if (!currentUser.getRole().equals(Role.ADMIN)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Only teachers and admins can delete grades");
+        }
+
+        gradeService.deleteById(id);
+        return "redirect:/grades";
+    }
+
 
     @GetMapping
     public String grades(@AuthenticationPrincipal UserDetails userDetails,
@@ -115,6 +135,8 @@ public class GradesController {
             allGrades = gradeService.getGradesForStudent(userDetails.getUsername());
         } else if (currentUser.getRole().equals(Role.TEACHER)) {
             allGrades = gradeService.getGradesForTeacher(userDetails.getUsername());
+        } else if (currentUser.getRole().equals(Role.PARENT)) {
+            allGrades = gradeService.getGradesForParent(userDetails.getUsername());
         } else {
             allGrades = gradeService.getAllGraders();
         }

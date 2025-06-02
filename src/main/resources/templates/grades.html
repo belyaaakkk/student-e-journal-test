@@ -47,7 +47,9 @@
                 <th th:text="#{label.grade.value}">Grade</th>
                 <th th:text="#{label.grade.reason}">Reason</th>
                 <th th:text="#{label.created.at}">Created At</th>
-                <th th:text="#{label.edit}">Edit</th>
+                <th th:text="#{label.edit}" sec:authorize="hasAuthority('ADMIN') or hasAuthority('TEACHER')">Edit</th>
+                <th th:text="#{label.delete}" sec:authorize="hasAuthority('ADMIN') or hasAuthority('TEACHER')">Delete
+                </th>
             </tr>
             </thead>
             <tbody>
@@ -61,10 +63,18 @@
                 <td th:text="${grade.score}">12</td>
                 <td th:text="${grade.comment}">Test</td>
                 <td th:text="${#temporals.format(grade.date, 'dd MMM, yyyy HH:mm')}">2025-05-01 14:00</td>
-                <td>
+                <td sec:authorize="hasAuthority('ADMIN') or hasAuthority('TEACHER')">
                     <a class="profile-link" th:href="@{'/grades/edit/' + ${grade.id}}"
                        th:text="#{label.edit}">Edit</a>
                 </td>
+                <td sec:authorize="hasAuthority('ADMIN') or hasAuthority('TEACHER')">
+                    <form th:action="@{'/grades/delete/' + ${grade.id}}" method="post"
+                          th:onsubmit="return confirm('Are you sure you want to delete this grade?');">
+                        <input type="hidden" name="_method" value="delete"/>
+                        <button type="submit" class="button-filter" th:text="#{label.delete}">Delete</button>
+                    </form>
+                </td>
+
             </tr>
             </tbody>
         </table>

@@ -5,14 +5,8 @@ import com.belyak.test.dto.GradeForm;
 import com.belyak.test.dto.ReadGradeDto;
 import com.belyak.test.exception.EntityNotFoundException;
 import com.belyak.test.mapper.GradeMapper;
-import com.belyak.test.model.Grade;
-import com.belyak.test.model.Student;
-import com.belyak.test.model.Subject;
-import com.belyak.test.model.Teacher;
-import com.belyak.test.repository.GradeRepository;
-import com.belyak.test.repository.StudentRepository;
-import com.belyak.test.repository.SubjectRepository;
-import com.belyak.test.repository.TeacherRepository;
+import com.belyak.test.model.*;
+import com.belyak.test.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +27,7 @@ public class GradeService {
     private final GradeMapper gradeMapper;
     private final TeacherRepository teacherRepository;
     private final SubjectRepository subjectRepository;
+    private final ParentRepository parentRepository;
 
 
     public List<ReadGradeDto> getGradesForStudent(String username) {
@@ -44,6 +39,25 @@ public class GradeService {
                 .map(gradeMapper::toReadGradeDto)
                 .collect(Collectors.toList());
     }
+
+    public List<ReadGradeDto> getGradesForParent(String username) {
+        Parent parent = parentRepository.findByUser_Username(username)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        ENTITY_NOT_FOUND.name(),
+                        "Parent with username %s not found".formatted(username)
+                ));
+
+        Student student = parent.getChildren().get(0);
+
+        return gradeRepository.findAllByStudent(student).stream()
+                .map(gradeMapper::toReadGradeDto)
+                .collect(Collectors.toList());
+    }
+
+    public void deleteById(Long id) {
+        gradeRepository.deleteById(id);
+    }
+
 
     public List<ReadGradeDto> getGradesForTeacher(String username) {
         Teacher teacher = teacherRepository.findByUser_Username(username)
