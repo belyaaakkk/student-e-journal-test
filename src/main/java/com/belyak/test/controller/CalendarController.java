@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -24,7 +25,6 @@ import java.util.List;
 public class CalendarController {
 
     private final EventService eventService;
-    private final SchoolClassRepository schoolClassRepository;
 
     @GetMapping
     public String getCalendar(
@@ -33,28 +33,21 @@ public class CalendarController {
             Model model,
             @AuthenticationPrincipal UserDetails userDetails) {
 
-        LocalDate date = month != null ? LocalDate.parse(month) : LocalDate.now();
-        List<EventReadDto> events;
-
         User user = (User) userDetails;
-        if (user.getRole() == Role.ADMIN && classId != null) {
-            events = eventService.getEventsByMonthAndClass(date.getYear(), date.getMonthValue(), classId);
-        } else {
-            events = eventService.getEventsByMonth(date.getYear(), date.getMonthValue(), userDetails);
-        }
+        LocalDate date = (month != null) ? LocalDate.parse(month) : LocalDate.now();
 
-        System.out.println("User Role: " + user.getRole());
-        System.out.println("Events fetched: " + events.size());
-        events.forEach(event -> System.out.println("Event: " + event.getTitle() + ", Start: " + event.getStartDate()));
+        List<EventReadDto> scheduleEvents = eventService.getEventsByMonth(date.getYear(), date.getMonthValue(), user);
+        List<EventReadDto> homeworkEvents = eventService.getHomeworkEventsByMonth(date.getYear(), date.getMonthValue(), user);
 
-        model.addAttribute("events", events);
+        List<EventReadDto> combinedEvents = new ArrayList<>();
+        combinedEvents.addAll(scheduleEvents);
+        combinedEvents.addAll(homeworkEvents);
+
+        model.addAttribute("events", combinedEvents);
         model.addAttribute("currentMonth", date);
-
-        if (user.getRole() == Role.ADMIN) {
-            List<SchoolClass> classes = schoolClassRepository.findAll();
-            model.addAttribute("classes", classes);
-        }
 
         return "calendar";
     }
+
+
 }

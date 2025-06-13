@@ -12,6 +12,7 @@ import java.util.Collections;
 
 // === USER ENTITY ===
 @Entity
+@ToString(exclude = "country")
 @Table(name = "users")
 @Getter
 @Setter

@@ -42,6 +42,7 @@ public class GradesController {
     @GetMapping("/add")
     public String showAddGradeForm(@AuthenticationPrincipal UserDetails userDetails, Model model) {
         User user = (User) userDetails;
+        System.out.println(user);
 
         // Найти учителя по логину
         Teacher teacher = teacherRepository.findByUser_Username(user.getUsername())
@@ -129,6 +130,7 @@ public class GradesController {
                          @RequestParam(defaultValue = "10") int size) {
 
         User currentUser = (User) userDetails;
+        System.out.println(currentUser.toString());
 
         List<ReadGradeDto> allGrades;
         if (currentUser.getRole().equals(Role.STUDENT)) {

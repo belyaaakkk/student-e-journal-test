@@ -3,35 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <title>School Calendar</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.5/main.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.5/main.min.js"></script>
+
     <style>
-        #event-card, #no-events {
-            display: none;
-            margin-top: 20px;
-            padding: 15px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+        .event-lesson {
+            background-color: #e6f0ff !important;
+            border-left: 4px solid #007bff;
+            color: #000;
         }
 
-        #event-card.show, #no-events.show {
+        .event-homework {
+            background-color: #fff8e1 !important;
+            border-left: 4px solid #ffca28;
+            color: #000;
+        }
+
+        .calendar-legend {
+            margin: 10px 0;
+        }
+
+        .legend-item {
+            display: inline-block;
+            padding: 6px 12px;
+            margin-right: 10px;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #000;
+        }
+
+        .legend-lesson {
+            background-color: #e6f0ff;
+            border-left: 4px solid #007bff;
+        }
+
+        .legend-homework {
+            background-color: #fff8e1;
+            border-left: 4px solid #ffca28;
+        }
+
+        #event-card {
+            display: none;
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-top: 15px;
+            background-color: #f9f9f9;
+        }
+
+        #event-card.show {
+            display: block;
+        }
+
+        .no-events {
+            display: none;
+            margin-top: 10px;
+            color: #888;
+        }
+
+        .no-events.show {
             display: block;
         }
 
         .event-item {
-            margin-bottom: 15px;
-            padding: 10px;
-            border-bottom: 1px solid #eee;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ccc;
         }
 
         .label {
             font-weight: bold;
-        }
-
-        #close-card {
-            margin-top: 10px;
-            padding: 5px 10px;
         }
     </style>
 </head>
@@ -46,17 +87,9 @@
     <div class="profile-header" th:text="#{label.calendar}">Calendar</div>
 
     <div class="container">
-        <!-- Admin class filter -->
-        <div sec:authorize="hasRole('ADMIN')" class="class-filter">
-            <label for="class-select">Filter by Class:</label>
-            <select id="class-select"
-                    onchange="window.location.href='/calendar?month=' + document.getElementById('current-month').value + '&classId=' + this.value">
-                <option value="">All Classes</option>
-                <option th:each="schoolClass : ${classes}"
-                        th:value="${schoolClass.id}"
-                        th:text="${schoolClass.name}"></option>
-            </select>
-            <input type="hidden" id="current-month" th:value="${currentMonth}"/>
+        <div class="calendar-legend">
+            <span class="legend-item legend-lesson">Lesson</span>
+            <span class="legend-item legend-homework">Homework</span>
         </div>
 
         <div id="calendar"></div>
@@ -73,10 +106,7 @@
             document.addEventListener('DOMContentLoaded', function () {
                 try {
                     const events = /*[[${events}]]*/ [];
-                    console.log('Raw events data:', events);
-
                     const mappedEvents = events.map(event => {
-                        console.log('Processing event:', event);
                         return {
                             id: event.id,
                             title: event.title || 'Untitled Event',
@@ -96,19 +126,12 @@
                         };
                     }).filter(event => event.start && event.end);
 
-                    console.log('Mapped events:', mappedEvents);
-
                     const calendarEl = document.getElementById('calendar');
                     const eventCard = document.getElementById('event-card');
                     const cardDate = document.getElementById('card-date');
                     const eventContent = document.getElementById('event-content');
                     const noEvents = document.getElementById('no-events');
                     const closeCard = document.getElementById('close-card');
-
-                    if (!calendarEl) {
-                        console.error('Calendar element not found');
-                        return;
-                    }
 
                     const calendar = new FullCalendar.Calendar(calendarEl, {
                         initialView: 'dayGridMonth',
@@ -130,27 +153,21 @@
                         },
                         dateClick: function (info) {
                             const clickedDate = info.dateStr;
-                            console.log('Clicked date:', clickedDate);
-
-                            // Hide card and no-events message
                             eventCard.classList.remove('show');
                             noEvents.classList.remove('show');
 
-                            // Filter events for the clicked date
                             const eventsOnDate = mappedEvents.filter(event => {
                                 const eventDate = new Date(event.start).toISOString().split('T')[0];
                                 return eventDate === clickedDate;
                             });
 
-                            console.log('Events on date:', eventsOnDate);
-
-                            // Update card content
                             cardDate.textContent = `Events on ${new Date(clickedDate).toLocaleDateString('en-US', {
                                 weekday: 'long',
                                 year: 'numeric',
                                 month: 'long',
                                 day: 'numeric'
                             })}`;
+
                             if (eventsOnDate.length > 0) {
                                 eventContent.innerHTML = eventsOnDate.map(event => {
                                     let content = `
@@ -176,9 +193,9 @@
                             }
                         }
                     });
+
                     calendar.render();
 
-                    // Close card button handler
                     closeCard.addEventListener('click', function () {
                         eventCard.classList.remove('show');
                     });

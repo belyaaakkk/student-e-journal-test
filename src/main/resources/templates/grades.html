@@ -45,7 +45,7 @@
                 <th th:text="#{label.subject}">Subject</th>
                 <th th:text="#{label.teacher.name}">Teacher</th>
                 <th th:text="#{label.grade.value}">Grade</th>
-                <th th:text="#{label.grade.reason}">Reason</th>
+                <th th:text="#{label.grade.comment}">Reason</th>
                 <th th:text="#{label.created.at}">Created At</th>
                 <th th:text="#{label.edit}" sec:authorize="hasAuthority('ADMIN') or hasAuthority('TEACHER')">Edit</th>
                 <th th:text="#{label.delete}" sec:authorize="hasAuthority('ADMIN') or hasAuthority('TEACHER')">Delete
@@ -59,7 +59,7 @@
             <tr th:each="grade, iterStat : ${grades}">
                 <td th:text="${iterStat.index + 1}">1</td>
                 <td th:text="#{${grade.subjectMessageKey}}">Math</td>
-                <td th:text="${grade.teacher.firstname }">John Doe</td>
+                <td th:text="${grade.teacher.lastname }">John Doe</td>
                 <td th:text="${grade.score}">12</td>
                 <td th:text="${grade.comment}">Test</td>
                 <td th:text="${#temporals.format(grade.date, 'dd MMM, yyyy HH:mm')}">2025-05-01 14:00</td>
