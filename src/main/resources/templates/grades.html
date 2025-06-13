@@ -31,7 +31,7 @@
                     </select>
                 </div>
                 <button class="button-filter" type="submit" th:text="#{label.filter}">Filter</button>
-                <a th:href="@{/grades/add}" class="button-filter" th:text="#{label.add_homework}"
+                <a th:href="@{/grades/add}" class="button-filter" th:text="#{label.add_grade}"
                    sec:authorize="hasAuthority('TEACHER')">
                     Add Homework
                 </a>

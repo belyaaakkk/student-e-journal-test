@@ -23,17 +23,16 @@
         <form th:action="@{/students/create}" method="post" th:object="${student}">
             <input type="hidden" name="_csrf" th:value="${_csrf.token}">
 
-
             <div class="profile-row">
                 <div class="input-group">
                     <label th:text="#{label.first.name}">First Name</label>
                     <input type="text" id="firstname" name="firstname" th:value="${student.firstname}"
-                           placeholder="Enter first name">
+                           th:placeholder="#{label.enter_firstname}">
                 </div>
                 <div class="input-group">
                     <label th:text="#{label.last.name}">Last Name</label>
                     <input type="text" id="lastname" name="lastname" th:value="${student.lastname}"
-                           placeholder="Enter last name">
+                           th:placeholder="#{label.enter_lastname}">
                 </div>
             </div>
 
@@ -41,7 +40,7 @@
                 <div class="input-group">
                     <label th:text="#{label.username}">Username</label>
                     <input type="text" id="username" name="username" th:value="${student.username}"
-                           placeholder="Enter username">
+                           th:placeholder="#{label.enter_username}">
                 </div>
             </div>
 
@@ -49,19 +48,20 @@
                 <div class="input-group">
                     <label th:text="#{label.email}">Email</label>
                     <input type="text" id="email" name="email" th:value="${student.email}"
-                           placeholder="Enter email">
+                           th:placeholder="#{label.enter_email}">
                 </div>
                 <div class="input-group">
                     <label th:text="#{label.phone}">Phone</label>
                     <input type="text" id="phoneNumber" name="phoneNumber" th:value="${student.phoneNumber}"
-                           placeholder="Enter phone number">
+                           th:placeholder="#{label.enter_phone}">
                 </div>
             </div>
 
             <div class="profile-row">
                 <div class="input-group">
                     <label th:text="#{label.dob}">Date of Birth</label>
-                    <input type="date" id="dateOfBirth" name="dateOfBirth" th:value="${student.dateOfBirth}">
+                    <input type="date" id="dateOfBirth" name="dateOfBirth" th:value="${student.dateOfBirth}"
+                           th:placeholder="#{label.enter_dob}">
                 </div>
                 <div class="input-group">
                     <label th:text="#{label.enrollment_date}">Enrollment Date</label>
@@ -74,7 +74,7 @@
                     <label th:text="#{label.country}">Country</label>
                     <div>
                         <select name="countryCode" id="countryCode" th:field="*{countryCode}">
-                            <option value="" disabled selected>Select country</option>
+                            <option value="" disabled selected th:text="#{label.enter_country}">Select country</option>
                             <option th:each="country : ${countries}"
                                     th:value="${country.code}"
                                     th:text="#{${country.messageKey}}">
@@ -102,7 +102,8 @@
             <div class="profile-row">
                 <div class="input-group">
                     <label th:text="#{label.bio}">Bio</label>
-                    <input type="text" id="bio" name="bio" th:value="${student.bio}" placeholder="Enter bio">
+                    <input type="text" id="bio" name="bio" th:value="${student.bio}"
+                           th:placeholder="#{label.enter_bio}">
                 </div>
             </div>
 

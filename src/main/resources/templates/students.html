@@ -21,7 +21,7 @@
         <form method="get" th:action="@{/students}">
             <div class="profile-row">
                 <div>
-                    <label for="classFilter" th:text="#{label.filter_by_status}">Filter by class:</label>
+                    <label for="classFilter" th:text="#{label.filter_by_class}">Filter by class:</label>
                     <select name="classFilter" id="classFilter">
                         <option value="" th:text="#{label.all}">All</option>
                         <option th:each="className : ${allClasses}"

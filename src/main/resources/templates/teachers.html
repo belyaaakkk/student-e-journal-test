@@ -24,7 +24,9 @@
                 Add Teacher
             </a>
         </div>
-        <br><br><br>
+        <br>
+
+
         <div class="teachers-grid">
             <div class="teacher-card" th:each="teacher : ${teachers}">
                 <a th:href="@{/teachers/{id}(id=${teacher.id})}" class="teacher-card-link">

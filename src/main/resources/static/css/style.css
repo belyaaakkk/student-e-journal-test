@@ -96,6 +96,7 @@ main p {
 .delete-btn {
     font-family: Poppins, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     display: inline-block;
+    font-size: 16px;
     margin-top: 15px;
     margin-bottom: 15px;
     width: 100%;
@@ -733,7 +734,7 @@ details[open] summary::before {
 }
 
 .full-page-center {
-    min-height: 62vh;
+    min-height: 68vh;
     display: flex;
     justify-content: center;
     align-items: center;

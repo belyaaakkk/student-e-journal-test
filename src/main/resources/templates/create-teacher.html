@@ -22,7 +22,7 @@
     <div class="container">
         <form th:action="@{/teachers/create}" method="post" th:object="${teacher}">
             <input type="hidden" name="_csrf" th:value="${_csrf.token}">
-            <!-- Ошибки валидации -->
+
             <div data-th-if="${errors}" class="alert alert-error">
                 <ul>
                     <li th:each="error : ${errors}" th:text="${error}"></li>
@@ -33,12 +33,12 @@
                 <div class="input-group">
                     <label th:text="#{label.first.name}">First Name</label>
                     <input type="text" id="firstname" name="firstname" th:field="*{firstname}"
-                           placeholder="Enter first name">
+                           th:placeholder="#{label.enter_firstname}">
                 </div>
                 <div class="input-group">
                     <label th:text="#{label.last.name}">Last Name</label>
                     <input type="text" id="lastname" name="lastname" th:field="*{lastname}"
-                           placeholder="Enter last name">
+                           th:placeholder="#{label.enter_lastname}">
                 </div>
             </div>
 
@@ -46,19 +46,20 @@
                 <div class="input-group">
                     <label th:text="#{label.username}">Username</label>
                     <input type="text" id="username" name="username" th:field="*{username}"
-                           placeholder="Enter username">
+                           th:placeholder="#{label.enter_username}">
                 </div>
             </div>
 
             <div class="profile-row">
                 <div class="input-group">
                     <label th:text="#{label.email}">Email</label>
-                    <input type="text" id="email" name="email" th:field="*{email}" placeholder="Enter email">
+                    <input type="text" id="email" name="email" th:field="*{email}"
+                           th:placeholder="#{label.enter_email}">
                 </div>
                 <div class="input-group">
                     <label th:text="#{label.phone}">Phone</label>
                     <input type="text" id="phoneNumber" name="phoneNumber" th:field="*{phoneNumber}"
-                           placeholder="Enter phone number">
+                           th:placeholder="#{label.enter_phone}">
                 </div>
             </div>
 
@@ -66,7 +67,7 @@
                 <div class="input-group">
                     <label th:text="#{label.subject}">Subject</label>
                     <select name="subjectCode" th:field="*{subjectCode}">
-                        <option value="" disabled selected>Select subject</option>
+                        <option value="" disabled selected th:text="#{label.enter_subject}">Виберіть предмет</option>
                         <option th:each="subject : ${subjects}"
                                 th:value="${subject.code}"
                                 th:text="#{${subject.messageKey}}"
@@ -78,11 +79,10 @@
                     <label th:text="#{label.country}">Country</label>
                     <div>
                         <select name="countryCode" id="countryCode" th:field="*{countryCode}">
-                            <option value="" disabled selected>Select country</option>
+                            <option value="" disabled selected th:text="#{label.enter_country}">Виберіть країну</option>
                             <option th:each="country : ${countries}"
                                     th:value="${country.code}"
-                                    th:text="#{${country.messageKey}}">
-                            </option>
+                                    th:text="#{${country.messageKey}}"></option>
                         </select>
                     </div>
                 </div>
@@ -93,22 +93,21 @@
                     <label th:text="#{label.dob}">Date of Birth</label>
                     <div>
                         <input type="date" class="dob" id="dateOfBirth" name="dateOfBirth"
-                               th:field="*{dateOfBirth}" required>
+                               th:field="*{dateOfBirth}" required
+                               th:placeholder="#{label.enter_dob}">
                     </div>
                 </div>
             </div>
 
-            <!-- Біографія -->
             <div class="profile-row">
                 <div class="input-group">
                     <label th:text="#{label.bio}">Bio</label>
                     <div class="bio">
                         <input type="text" class="bio-input" id="bio" name="bio" th:field="*{bio}"
-                               placeholder="Enter bio">
+                               th:placeholder="#{label.enter_bio}">
                     </div>
                 </div>
             </div>
-
 
             <button type="submit" class="btn" th:text="#{button.save}">Save</button>
 

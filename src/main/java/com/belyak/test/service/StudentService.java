@@ -52,12 +52,6 @@ public class StudentService {
                         "Student with id %d not found".formatted(id)));
     }
 
-    public List<ReadStudentDto> getAllStudents() {
-        return this.studentRepository.findAll()
-                .stream().map(studentMapper::toReadStudentDto)
-                .collect(Collectors.toList());
-    }
-
     @Transactional
     public void updateStudent(Long id, EditStudentDto studentDto) {
         Student student = this.studentRepository.findById(id)
@@ -130,5 +124,11 @@ public class StudentService {
             System.out.println("Student with id " + id + " not found");
         }
         studentRepository.deleteById(id);
+    }
+
+    public List<ReadStudentDto> getAllStudents() {
+        return this.studentRepository.findAll()
+                .stream().map(studentMapper::toReadStudentDto)
+                .collect(Collectors.toList());
     }
 }
