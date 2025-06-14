@@ -127,7 +127,7 @@ public class GradesController {
                          Model model,
                          @RequestParam(required = false) String subject,
                          @RequestParam(defaultValue = "0") int page,
-                         @RequestParam(defaultValue = "10") int size) {
+                         @RequestParam(defaultValue = "6") int size) {
 
         User currentUser = (User) userDetails;
         System.out.println(currentUser.toString());

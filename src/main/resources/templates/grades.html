@@ -22,7 +22,7 @@
                 <div>
                     <label th:text="#{label.subject}">Subject</label>
                     <select name="subject">
-                        <option value="" th:selected="${selectedSubject == null}">All</option>
+                        <option value="" th:selected="${selectedSubject == null}" th:text="#{label.all}">All</option>
                         <option th:each="subject : ${subjects}"
                                 th:value="${subject}"
                                 th:text="#{${subject}}"
@@ -62,7 +62,7 @@
                 <td th:text="${grade.teacher.lastname }">John Doe</td>
                 <td th:text="${grade.score}">12</td>
                 <td th:text="${grade.comment}">Test</td>
-                <td th:text="${#temporals.format(grade.date, 'dd MMM, yyyy HH:mm')}">2025-05-01 14:00</td>
+                <td th:text="${#temporals.format(grade.date, 'dd MMMM yyyy HH:mm', T(java.util.Locale).forLanguageTag('uk'))}"></td>
                 <td sec:authorize="hasAuthority('ADMIN') or hasAuthority('TEACHER')">
                     <a class="profile-link" th:href="@{'/grades/edit/' + ${grade.id}}"
                        th:text="#{label.edit}">Edit</a>

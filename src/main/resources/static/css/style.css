@@ -687,8 +687,8 @@ details[open] summary::before {
 .pagination {
     display: flex;
     justify-content: center;
-    margin-top: 1.5em;
-    margin-bottom: 1em;
+    margin-top: 1em;
+    /*margin-bottom: .5em;*/
 }
 
 .pagination ul {
@@ -734,7 +734,7 @@ details[open] summary::before {
 }
 
 .full-page-center {
-    min-height: 68vh;
+    min-height: 80%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -753,6 +753,7 @@ details[open] summary::before {
     align-items: center;
     justify-content: center;
     gap: 1em;
+    margin-top: 2em;
     margin-bottom: 2em;
     padding: 0.5em;
     background-color: var(--line-clr);
@@ -815,4 +816,273 @@ details[open] summary::before {
     font-weight: 600;
     color: var(--text-clr);
     white-space: nowrap;
+}
+
+
+
+/* Для планшетов (ширина экрана от 768px до 1024px) */
+@media (max-width: 1024px) {
+    .personal-photo {
+        max-width: 50%;
+        max-height: 50%;
+    }
+    main {
+        padding: min(20px, 5%); /* Уменьшаем отступы */
+    }
+
+    .container {
+        padding: min(2em, 10%); /* Меньше внутренние отступы */
+    }
+
+    .teachers-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Уменьшаем минимальную ширину колонок */
+        gap: 1.5em; /* Меньше промежутки */
+    }
+
+    .profile-row {
+        flex-direction: column; /* Столбец вместо строки для профильных полей */
+        gap: 0.5em;
+    }
+
+    .schedule-navigation {
+        flex-wrap: wrap; /* Перенос элементов на следующую строку, если не помещаются */
+        gap: 0.5em;
+        padding: 0.5em;
+    }
+
+    .week-range {
+        font-size: 1rem; /* Уменьшаем шрифт для диапазона недели */
+    }
+
+    .nav-button {
+        padding: 0.5em 1em; /* Уменьшаем отступы кнопок навигации */
+        font-size: 0.95rem;
+    }
+
+    .btn, .delete-btn, .button-link, .button-filter {
+        padding: 1em; /* Уменьшаем размер кнопок */
+        font-size: 14px;
+    }
+
+    #event-card {
+        width: 90%; /* Карточка события занимает больше ширины экрана */
+        max-width: 350px;
+    }
+}
+
+/* Для телефонов (ширина экрана до 768px) */
+@media (max-width: 768px) {
+    .personal-photo {
+        max-width: 50%;
+        max-height: 300px;
+    }
+    body {
+        grid-template-columns: 1fr; /* Убираем боковую колонку, если есть */
+    }
+
+    main {
+        padding: min(15px, 4%); /* Еще меньше отступы */
+    }
+
+    .container {
+        padding: min(1.5em, 8%);
+        margin-bottom: 15px;
+    }
+
+    h2 {
+        font-size: 1.5rem; /* Уменьшаем заголовки */
+    }
+
+    .teachers-grid {
+        grid-template-columns: 1fr; /* Одна колонка для карточек учителей */
+        gap: 1em;
+    }
+
+    .teacher-photo {
+        width: 60%; /* Уменьшаем размер фото */
+    }
+
+    .profile-header {
+        font-size: 20px; /* Уменьшаем заголовок профиля */
+    }
+
+    input, select {
+        font-size: 14px; /* Уменьшаем шрифт для инпутов */
+        padding: 0.5em;
+        height: 2.5em; /* Уменьшаем высоту */
+    }
+
+    .btn, .delete-btn, .button-link, .button-filter {
+        padding: 0.75em; /* Еще меньше отступы для кнопок */
+        font-size: 13px;
+    }
+
+    .schedule-navigation {
+        flex-direction: column; /* Навигация в столбец */
+        gap: 0.5em;
+        padding: 0.75em;
+    }
+
+    .nav-button {
+        width: 100%; /* Кнопки навигации на всю ширину */
+        text-align: center;
+    }
+
+    .week-range-wrapper {
+        padding: 0.5em 1em;
+        text-align: center;
+    }
+
+    table {
+        display: block;
+        overflow-x: hidden; /* Убираем прокрутку, если используем карточки */
+    }
+
+    thead {
+        display: none; /* Скрываем заголовки таблицы */
+    }
+
+    tbody {
+        display: flex;
+        flex-direction: column;
+        gap: 1em;
+    }
+
+    tbody tr {
+        display: flex;
+        flex-direction: column;
+        background-color: var(--line-clr);
+        border-radius: 0.5em;
+        padding: 0.5em;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    tbody td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5em;
+        border-bottom: none; /* Убираем границы ячеек */
+        text-align: left;
+    }
+
+    /* Добавляем псевдоэлемент с названием столбца, основанным на data-атрибуте */
+    tbody td:before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: var(--text-clr);
+        width: 40%;
+    }
+
+    tbody td:last-child {
+        justify-content: center;
+    }
+
+    .pagination a {
+        width: 2em;
+        height: 2em;
+        font-size: 0.85rem;
+    }
+
+    #event-card {
+        width: 95%; /* Карточка события почти на весь экран */
+        max-width: 300px;
+        padding: 15px;
+    }
+
+    #event-card h3 {
+        font-size: 1.3rem;
+    }
+
+    .faq-item summary {
+        font-size: 14px; /* Уменьшаем шрифт для FAQ */
+    }
+
+    .faq-item p {
+        font-size: 0.85rem;
+    }
+
+    .announcement h2 {
+        font-size: 1.3rem;
+    }
+
+    .announcement p {
+        font-size: 0.9rem;
+    }
+
+    .social-links {
+        gap: 0.5em; /* Уменьшаем промежутки между иконками */
+    }
+
+    .social-icon svg {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+/* Для очень маленьких экранов (до 480px) */
+@media (max-width: 480px) {
+    .personal-photo {
+        max-width: 80%;
+        max-height: 300px;
+    }
+    main {
+        padding: min(10px, 3%);
+    }
+
+    .container {
+        padding: min(1em, 6%);
+    }
+
+    h2 {
+        font-size: 1.3rem;
+    }
+
+    .teacher-photo {
+        width: 50%;
+    }
+
+    table {
+        font-size: 0.8rem;
+    }
+    thead th, tbody td {
+        padding: 0.4em;
+        min-width: 60px;
+    }
+
+
+    .profile-header {
+        font-size: 18px;
+    }
+
+    input, select {
+        font-size: 13px;
+        padding: 0.4em;
+        height: 2.25em;
+    }
+
+    .btn, .delete-btn, .button-link, .button-filter {
+        padding: 0.6em;
+        font-size: 12px;
+    }
+
+    .week-range {
+        font-size: 0.9rem;
+    }
+
+    #event-card {
+        width: 98%;
+        max-width: 280px;
+        padding: 10px;
+    }
+
+    #event-card h3 {
+        font-size: 1.2rem;
+    }
+
+    .pagination a {
+        width: 1.8em;
+        height: 1.8em;
+        font-size: 0.8rem;
+    }
 }

@@ -169,7 +169,7 @@ html.sidebar-closed #sidebar .dropdown-container .sub-menu a {
 
     .container {
         border: none;
-        padding: 0;
+        padding: 1em;
     }
 
     #sidebar {

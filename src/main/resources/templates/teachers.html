@@ -35,7 +35,8 @@
                     <div class="card-content">
                         <div class="card-info">
                             <span class="teacher-role"
-                                  th:text="${teacher.subjectCode} + ' ' + 'Teacher'">Mathematics Teacher</span>
+                                  th:text="'Вчитель ' + ${#messages.msg('label.' + teacher.subjectCode)}">
+                            </span>
                             <h3 th:text="${teacher.firstname} + ' ' + ${teacher.lastname}">Bob Brown</h3>
                             <p class="teacher-bio" th:text="${teacher.bio} ?: #{label.defaultBio}">Experienced educator
                                 with a passion for teaching mathematics.</p>

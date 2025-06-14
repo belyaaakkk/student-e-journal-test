@@ -1,7 +1,7 @@
 .messages-container {
     display: flex;
     gap: 1em;
-    height: 70vh;
+    height: 79vh;
     overflow: hidden;
 }
 
@@ -202,16 +202,173 @@
     padding: 0.75em 1.5em;
 }
 
+/* Optimized for phones (up to 768px) */
 @media (max-width: 768px) {
     .messages-container {
-        flex-direction: column;
-        height: auto;
+        flex-direction: column; /* Stack sidebar and messages vertically */
+        height: auto; /* Allow natural height */
+        min-height: 90vh; /* Ensure it fills most of the screen */
+        gap: 0.5em; /* Reduce gap */
     }
+
     .conversations-sidebar {
-        flex: 0 0 auto;
-        max-height: 40vh;
+        flex: 0 0 auto; /* Auto height */
+        max-height: 35vh; /* Limit sidebar height */
+        padding: 0.75em; /* Reduce padding */
+        width: 100%; /* Full width */
     }
+
+    .conversations-sidebar h3 {
+        font-size: 1rem; /* Smaller header */
+        margin-bottom: 0.75em;
+    }
+
+    .conversation-preview {
+        padding: 0.5em; /* Reduce padding */
+    }
+
+    .user-photo {
+        width: 32px; /* Smaller photo */
+        height: 32px;
+        margin-right: 0.5em;
+    }
+
+    .conversation-info h4 {
+        font-size: 0.9rem; /* Smaller font */
+    }
+
+    .conversation-info p {
+        font-size: 0.8rem;
+    }
+
+    .conversation-info .timestamp {
+        font-size: 0.75rem;
+    }
+
+    .no-conversations, .no-selection {
+        font-size: 0.9rem;
+        padding: 1em;
+    }
+
     .messages-area {
+        padding: 0.75em; /* Reduce padding */
         flex: 1;
+        width: 100%; /* Full width */
+    }
+
+    .conversation-header h3 {
+        font-size: 1rem; /* Smaller header */
+    }
+
+    .messages-list {
+        padding: 0.25em; /* Reduce padding */
+    }
+
+    .message-content {
+        max-width: 85%; /* Wider messages to use more space */
+        padding: 0.5em; /* Reduce padding */
+    }
+
+    .message-content p {
+        font-size: 0.9rem; /* Smaller font */
+    }
+
+    .message-content .timestamp {
+        font-size: 0.75rem;
+    }
+
+    .message-form {
+        margin-top: 0.5em;
+        padding-top: 0.5em;
+    }
+
+    .message-form textarea {
+        font-size: 0.9rem;
+        padding: 0.5em;
+        min-height: 2.5em; /* Smaller textarea */
+        max-height: 8em;
+    }
+
+    .message-form .btn {
+        padding: 0.5em 1em; /* Smaller button */
+        font-size: 0.9rem;
+    }
+}
+
+/* For very small screens (up to 480px) */
+@media (max-width: 480px) {
+    .messages-container {
+        gap: 0.25em; /* Further reduce gap */
+        min-height: 95vh; /* Fill more of the screen */
+    }
+
+    .conversations-sidebar {
+        padding: 0.5em;
+        max-height: 30vh; /* Further limit height */
+    }
+
+    .conversations-sidebar h3 {
+        font-size: 0.9rem;
+        margin-bottom: 0.5em;
+    }
+
+    .conversation-preview {
+        padding: 0.4em;
+    }
+
+    .user-photo {
+        width: 28px;
+        height: 28px;
+        margin-right: 0.4em;
+    }
+
+    .conversation-info h4 {
+        font-size: 0.85rem;
+    }
+
+    .conversation-info p {
+        font-size: 0.75rem;
+    }
+
+    .conversation-info .timestamp {
+        font-size: 0.7rem;
+    }
+
+    .no-conversations, .no-selection {
+        font-size: 0.85rem;
+        padding: 0.75em;
+    }
+
+    .messages-area {
+        padding: 0.5em;
+    }
+
+    .conversation-header h3 {
+        font-size: 0.9rem;
+    }
+
+    .message-content {
+        max-width: 90%; /* Use more width */
+        padding: 0.4em;
+    }
+
+    .message-content p {
+        font-size: 0.85rem;
+    }
+
+    .message-content .timestamp {
+        font-size: 0.7rem;
+    }
+
+    .message-form textarea {
+        font-size: 0.85rem;
+        padding: 0.4em;
+        min-height: 2em;
+        max-height: 6em;
+    }
+
+    .message-form .btn {
+        padding: 0.4em 0.8em;
+        font-size: 0.85rem;
     }
 }

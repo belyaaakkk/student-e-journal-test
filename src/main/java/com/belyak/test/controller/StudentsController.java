@@ -40,7 +40,7 @@ public class StudentsController {
                            @RequestParam(value = "page", defaultValue = "0") int page) {
 
         Sort sort = Sort.by(sortDirection.equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, sortField);
-        Pageable pageable = PageRequest.of(page, 15, sort); // 15 студентов на страницу
+        Pageable pageable = PageRequest.of(page, 9, sort); // 15 студентов на страницу
 
         Page<ReadStudentDto> studentsPage = studentService.getAllStudentsFiltered(classFilter, pageable);
 

@@ -51,7 +51,7 @@
             </p>
             <p>
                 <strong th:text="#{label.deadline}">Due by:</strong>
-                <span th:text="${#temporals.format(homework.dueDate, 'dd MMM yyyy HH:mm')}"></span>
+                <span th:text="${#strings.capitalize(#temporals.format(homework.dueDate, 'dd MMM yyyy HH:mm', T(java.util.Locale).forLanguageTag('uk')))}"></span>
             </p>
             <form th:action="@{'/homework/delete/' + ${homework.id}}" method="post"
                   sec:authorize="hasAuthority('TEACHER') or hasAuthority('ADMIN')">

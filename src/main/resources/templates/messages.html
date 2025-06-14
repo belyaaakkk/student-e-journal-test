@@ -32,15 +32,15 @@
                     <div class="message-content">
                         <strong th:text="${message.sender.firstname + ' ' + message.sender.lastname}">Sender Name</strong>
                         <p th:text="${message.content}">Message content</p>
-                        <span class="timestamp" th:text="${#temporals.format(message.timestamp, 'dd MMM yyyy HH:mm')}">Date</span>
+                        <span class="timestamp" th:text="${#strings.capitalize(#temporals.format(message.timestamp, 'dd MMM yyyy HH:mm', T(java.util.Locale).forLanguageTag('uk')))}">Date</span>
                     </div>
                 </div>
             </div>
 
             <form class="message-form">
                 <div class="input-group">
-                    <textarea name="content" placeholder="Type your message..." required></textarea>
-                    <button type="submit" class="btn">Send</button>
+                    <textarea name="content" th:placeholder="#{placeholder.type_message}" required></textarea>
+                    <button type="submit" class="btn" th:text="#{support.button.send}">Send</button>
                 </div>
             </form>
         </div>

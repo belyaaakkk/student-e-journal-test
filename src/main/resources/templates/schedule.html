@@ -16,12 +16,17 @@
     <div class="profile-header" th:text="#{label.schedule}">Schedule</div>
 
     <div class="container">
-        <div th:if="${student != null}">
-            <p>Студент: <span th:text="${student.firstName} + ' ' + ${student.lastName}"></span></p>
-            <p>Клас: <span th:text="${student.classCode}"></span></p>
-        </div>
+<!--        <div th:if="${student != null}">-->
+<!--            <p>Студент: <span th:text="${student.firstName} + ' ' + ${student.lastName}"></span></p>-->
+<!--            <p>Клас: <span th:text="${student.classCode}"></span></p>-->
+<!--        </div>-->
+        <a th:href="@{/schedule/add}" class="button-filter" th:text="#{label.add_schedule}"
+           sec:authorize="hasAuthority('TEACHER') or hasAuthority('ADMIN')">
+            Add to Schedule
+        </a>
 
         <div class="schedule-navigation">
+
             <form th:action="@{/schedule}" method="get">
                 <input type="hidden" name="weekOffset" th:value="${weekOffset - 1}"/>
                 <button type="submit" class="nav-button">
@@ -64,7 +69,7 @@
                     <td colspan="6" th:text="#{label.no.schedule}">Немає розкладу</td>
                 </tr>
                 <tr th:each="schedule : ${schedules}">
-                    <td th:text="${#temporals.format(schedule.startTime, 'EEEE', #locale)}">Понеділок</td>
+                    <td th:text="${#strings.capitalize(#strings.toLowerCase(#temporals.format(schedule.startTime, 'EEEE', T(java.util.Locale).forLanguageTag('uk'))))}"></td>
                     <td th:text="${#temporals.format(schedule.startTime, 'HH:mm')} + '–' + ${#temporals.format(schedule.endTime, 'HH:mm')}">08:00–08:45</td>
                     <td th:text="#{${schedule.subject.messageKey}}">Математика</td>
                     <td th:text="${schedule.teacher.user.firstname} + ' ' + ${schedule.teacher.user.lastname}">Ольга Коваленко</td>

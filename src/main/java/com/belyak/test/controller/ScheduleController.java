@@ -46,7 +46,7 @@ public class ScheduleController {
     public String getSchedule(@AuthenticationPrincipal UserDetails userDetails,
                               @RequestParam(value = "weekOffset", defaultValue = "0") int weekOffset,
                               @RequestParam(value = "page", defaultValue = "0") int page,
-                              @RequestParam(value = "size", defaultValue = "10") int size,
+                              @RequestParam(value = "size", defaultValue = "8") int size,
                               Model model) {
         // поиск пользователя
         User user = userRepository.findByUsername(userDetails.getUsername())

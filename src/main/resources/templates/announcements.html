@@ -48,7 +48,7 @@
             </p>
             <p>
                 <strong th:text="#{label.date}">Date:</strong>
-                <span th:text="${#temporals.format(announcement.createdAt, 'dd MMM yyyy HH:mm')}"></span>
+                <span th:text="${#strings.capitalize(#temporals.format(announcement.createdAt, 'dd MMM yyyy HH:mm', T(java.util.Locale).forLanguageTag('uk')))}"></span>
             </p>
             <p>
                 <strong th:text="#{label.author}">Author:</strong>
