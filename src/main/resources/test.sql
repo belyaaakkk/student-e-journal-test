@@ -19,7 +19,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Function to validate email format
+-- Function to validate emailEntity format
 CREATE OR REPLACE FUNCTION validate_email(email_input TEXT)
     RETURNS BOOLEAN AS
 $$
@@ -76,8 +76,8 @@ $$ LANGUAGE plpgsql STABLE;
 -- Users table
 CREATE TABLE users (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    email VARCHAR(255) NOT NULL UNIQUE,
-    username VARCHAR(50) NOT NULL UNIQUE,
+    emailEntity VARCHAR(255) NOT NULL UNIQUE,
+    usernameEntity VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     active BOOLEAN NOT NULL DEFAULT TRUE,
     telegram_id VARCHAR(255) UNIQUE,
@@ -85,9 +85,9 @@ CREATE TABLE users (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
 
     -- Constraints
-    CONSTRAINT users_email_format CHECK (validate_email(email)),
-    CONSTRAINT users_username_format CHECK (username ~* '^[a-zA-Z0-9_-]+$'),
-    CONSTRAINT users_username_length CHECK (LENGTH(username) BETWEEN 3 AND 50),
+    CONSTRAINT users_email_format CHECK (validate_email(emailEntity)),
+    CONSTRAINT users_username_format CHECK (usernameEntity ~* '^[a-zA-Z0-9_-]+$'),
+    CONSTRAINT users_username_length CHECK (LENGTH(usernameEntity) BETWEEN 3 AND 50),
     CONSTRAINT users_password_length CHECK (LENGTH(password) >= 6)
 );
 
@@ -330,8 +330,8 @@ CREATE TRIGGER trigger_team_creator_admin
 -- =========================================
 
 -- Users indexes
-CREATE INDEX idx_users_email ON users(email);
-CREATE INDEX idx_users_username ON users(username);
+CREATE INDEX idx_users_email ON users(emailEntity);
+CREATE INDEX idx_users_username ON users(usernameEntity);
 CREATE INDEX idx_users_active ON users(active) WHERE active = true;
 CREATE INDEX idx_users_telegram_id ON users(telegram_id) WHERE telegram_id IS NOT NULL;
 

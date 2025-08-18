@@ -1,4 +1,5 @@
 spring:
+
   datasource:
     url: jdbc:postgresql://localhost:5430/taskflow?currentSchema=taskflow
     username: postgres
@@ -12,6 +13,8 @@ spring:
     properties:
       hibernate:
         format_sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
 
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.xml
