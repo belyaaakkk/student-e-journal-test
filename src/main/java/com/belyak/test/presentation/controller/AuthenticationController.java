@@ -1,5 +1,6 @@
 package com.belyak.test.presentation.controller;
 
+import com.belyak.test.domain.application.auth.AuthenticationService;
 import com.belyak.test.presentation.dto.AuthenticationRequest;
 import com.belyak.test.presentation.dto.AuthenticationResponse;
 import com.belyak.test.presentation.dto.RefreshTokenRequest;

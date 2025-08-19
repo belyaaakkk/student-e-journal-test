@@ -1,6 +1,6 @@
 package com.belyak.test.infrastructure.security;
 
-import com.belyak.test.domain.shared.exception.InvalidTokenException;
+import com.belyak.test.domain.common.InvalidTokenException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
