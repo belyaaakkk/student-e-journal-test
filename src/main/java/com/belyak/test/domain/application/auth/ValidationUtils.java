@@ -16,10 +16,6 @@ public class ValidationUtils {
             "^[a-zA-Z0-9_-]{3,50}$"
     );
 
-//    private static final Pattern PASSWORD_PATTERN = Pattern.compile(
-//            "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,64}$"
-//    );
-
     public static String validateEmail(String email) {
         if (email == null || email.trim().isEmpty()) {
             throw new InvalidEmailException("Email cannot be null or empty");
@@ -50,11 +46,6 @@ public class ValidationUtils {
         if (password == null || password.trim().isEmpty()) {
             throw new InvalidPasswordException("Password cannot be null or empty");
         }
-//        if (!PASSWORD_PATTERN.matcher(password).matches()) {
-//            throw new InvalidPasswordException(
-//                    "Password must be 8-64 chars long, contain at least 1 uppercase, 1 lowercase, 1 digit and 1 special character"
-//            );
-//        }
         return password;
     }
 }

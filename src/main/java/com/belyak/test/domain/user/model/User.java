@@ -11,12 +11,12 @@ import java.util.UUID;
 @Getter
 public class User {
 
-    private UUID id;
+    private final UUID id;
     private final Email email;
     private final Username username;
     private final Password password;
     private boolean active;
-    private LocalDateTime createdAt;
+    private final LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     public User(UUID id, Email email, Username username, Password password, boolean active,
