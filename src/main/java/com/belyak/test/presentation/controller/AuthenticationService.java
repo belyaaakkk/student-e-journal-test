@@ -1,5 +1,8 @@
 package com.belyak.test.presentation.controller;
 
+import com.belyak.test.domain.shared.exception.EmailAlreadyExistsException;
+import com.belyak.test.domain.shared.exception.InvalidTokenException;
+import com.belyak.test.domain.shared.exception.UsernameAlreadyExistsException;
 import com.belyak.test.domain.user.model.User;
 import com.belyak.test.domain.user.repository.UserRepository;
 import com.belyak.test.domain.user.value.Email;
@@ -10,6 +13,7 @@ import com.belyak.test.infrastructure.security.UserPrincipal;
 import com.belyak.test.presentation.dto.AuthenticationRequest;
 import com.belyak.test.presentation.dto.AuthenticationResponse;
 import com.belyak.test.presentation.dto.RegisterRequest;
+import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,6 +31,13 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationResponse register(RegisterRequest request) {
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new EmailAlreadyExistsException("Email already exists");
+        }
+        if (userRepository.existsByUsername(request.getUsername())) {
+            throw new UsernameAlreadyExistsException("Username already exists");
+        }
+
         User user = User.createNew(
                 new Email(request.getEmail()),
                 new Username(request.getUsername()),
@@ -35,13 +46,7 @@ public class AuthenticationService {
         User saved = userRepository.save(user);
 
         UserPrincipal principal = UserPrincipal.fromDomain(saved);
-        String jwtToken = jwtService.generateToken(principal);
-        String refreshToken = jwtService.generateRefreshToken(principal);
-
-        return AuthenticationResponse.builder()
-                .accessToken(jwtToken)
-                .refreshToken(refreshToken)
-                .build();
+        return buildAuthResponse(principal);
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
@@ -56,38 +61,39 @@ public class AuthenticationService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         UserPrincipal principal = UserPrincipal.fromDomain(user);
+        return buildAuthResponse(principal);
+    }
 
+    public AuthenticationResponse refreshToken(String refreshToken) {
+        try {
+            final String subject = jwtService.extractUsername(refreshToken);
+
+            if (subject == null) {
+                throw new InvalidTokenException("Invalid refresh token: no subject found");
+            }
+            User user = userRepository.findByEmail(subject)
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found: " + subject));
+
+            UserPrincipal userPrincipal = UserPrincipal.fromDomain(user);
+
+            if (!jwtService.isRefreshTokenValid(refreshToken, userPrincipal)) {
+                throw new InvalidTokenException("Invalid or expired refresh token");
+            }
+
+            return buildAuthResponse(userPrincipal);
+
+        } catch (JwtException e) {
+            throw new InvalidTokenException("Failed to refresh token: " + e.getMessage());
+        }
+    }
+
+    private AuthenticationResponse buildAuthResponse(UserPrincipal principal) {
         String jwtToken = jwtService.generateToken(principal);
         String refreshToken = jwtService.generateRefreshToken(principal);
 
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
-                .build();
-    }
-
-    public AuthenticationResponse refreshToken(String refreshToken) {
-        final String userEmail = jwtService.extractUsername(refreshToken);
-
-        if (userEmail == null) {
-            throw new RuntimeException("Invalid refresh token");
-        }
-
-        var user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
-        var userPrincipal = UserPrincipal.fromDomain(user);
-
-        if (!jwtService.isTokenValid(refreshToken, userPrincipal)) {
-            throw new RuntimeException("Invalid refresh token");
-        }
-
-        var accessToken = jwtService.generateToken(userPrincipal);
-        var newRefreshToken = jwtService.generateRefreshToken(userPrincipal);
-
-        return AuthenticationResponse.builder()
-                .accessToken(accessToken)
-                .refreshToken(newRefreshToken)
                 .build();
     }
 }

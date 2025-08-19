@@ -1,5 +1,6 @@
 package com.belyak.test.presentation.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -15,20 +16,22 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RegisterRequest {
 
-    @NotBlank(message = "Username cannot be blank")
-    @Size(min = 3, max = 50, message = "Username must be {min}-{max} characters long")
-    @Pattern(regexp = "^[a-zA-Z0-9_-]+$", message = "Username can only contain letters, numbers, underscores, and hyphens")
+    @Schema(example = "john_doe", description = "Unique username")
+    @NotBlank
+    @Size(min = 3, max = 50)
     private String username;
 
-    @NotBlank(message = "Email cannot be blank")
-    @Email(message = "Invalid email format")
+    @Schema(example = "user@example.com", description = "Valid email address")
+    @NotBlank
+    @Email
     private String email;
 
-    @NotBlank(message = "Password cannot be blank")
-    @Size(min = 8, max = 64, message = "Password must be 8-64 characters long")
-//    @Pattern(
-//            regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&]).+$",
-//            message = "Password must contain at least 1 uppercase, 1 lowercase, 1 digit, and 1 special character"
-//    )
+    @Schema(example = "Password123!", description = "Password with uppercase, lowercase, digit and special char")
+    @NotBlank
+    @Size(min = 8, max = 64)
+    @Pattern(
+            regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&]).+$",
+            message = "Password must contain at least 1 uppercase, 1 lowercase, 1 digit, and 1 special character"
+    )
     private String password;
 }

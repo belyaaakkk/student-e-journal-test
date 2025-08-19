@@ -1,6 +1,7 @@
 package com.belyak.test.presentation.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,10 +11,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthenticationResponse {
-    @Schema(description = "JWT access token", example = "eyJhbGciOiJIUzI1...")
-    private String accessToken;
-
-    @Schema(description = "JWT refresh token", example = "eyJhbGciOiJIUzI1...")
+public class RefreshTokenRequest {
+    @Schema(example = "eyJhbGciOiJIUzI1...", description = "Valid refresh token")
+    @NotBlank
     private String refreshToken;
 }

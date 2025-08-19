@@ -1,6 +1,8 @@
 package com.belyak.test.infrastructure.security;
 
+import com.belyak.test.domain.shared.exception.InvalidTokenException;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -25,8 +27,16 @@ public class JwtService {
     @Value("${security.jwt.refresh}")
     private long refreshExpiration;
 
+    private static final String TOKEN_TYPE_CLAIM = "token_type";
+    private static final String ACCESS_TOKEN_TYPE = "access";
+    private static final String REFRESH_TOKEN_TYPE = "refresh";
+
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
+    }
+
+    public String extractTokenType(String token) {
+        return extractClaim(token, claims -> claims.get(TOKEN_TYPE_CLAIM, String.class));
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
@@ -35,20 +45,15 @@ public class JwtService {
     }
 
     public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+        Map<String, Object> claims = new HashMap<>();
+        claims.put(TOKEN_TYPE_CLAIM, ACCESS_TOKEN_TYPE);
+        return buildToken(claims, userDetails, jwtExpiration);
     }
 
-    public String generateToken(
-            Map<String, Object> extraClaims,
-            UserDetails userDetails
-    ) {
-        return buildToken(extraClaims, userDetails, jwtExpiration);
-    }
-
-    public String generateRefreshToken(
-            UserDetails userDetails
-    ) {
-        return buildToken(new HashMap<>(), userDetails, refreshExpiration);
+    public String generateRefreshToken(UserDetails userDetails) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put(TOKEN_TYPE_CLAIM, REFRESH_TOKEN_TYPE);
+        return buildToken(claims, userDetails, refreshExpiration);
     }
 
     private String buildToken(
@@ -56,10 +61,14 @@ public class JwtService {
             UserDetails userDetails,
             long expiration
     ) {
+        String subject = (userDetails instanceof UserPrincipal)
+                ? ((UserPrincipal) userDetails).getEmail() // всегда email
+                : userDetails.getUsername();
+
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
-                .setSubject(userDetails.getUsername())
+                .setSubject(subject) // email как subject
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
@@ -67,8 +76,24 @@ public class JwtService {
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
-        final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
+        final String subject = extractUsername(token);
+        if (userDetails instanceof UserPrincipal principal) {
+            return subject.equals(principal.getEmail()) && !isTokenExpired(token);
+        }
+        return subject.equals(userDetails.getUsername()) && !isTokenExpired(token);
+    }
+
+    public boolean isRefreshTokenValid(String token, UserDetails userDetails) {
+        final String subject = extractUsername(token);
+        final String tokenType = extractTokenType(token);
+
+        boolean subjectMatches = (userDetails instanceof UserPrincipal principal)
+                ? subject.equals(principal.getEmail())
+                : subject.equals(userDetails.getUsername());
+
+        return subjectMatches &&
+               REFRESH_TOKEN_TYPE.equals(tokenType) &&
+               !isTokenExpired(token);
     }
 
     private boolean isTokenExpired(String token) {
@@ -80,12 +105,16 @@ public class JwtService {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts
-                .parserBuilder()
-                .setSigningKey(getSignInKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        try {
+            return Jwts
+                    .parserBuilder()
+                    .setSigningKey(getSignInKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (JwtException | IllegalArgumentException e) {
+            throw new InvalidTokenException("Invalid JWT token");
+        }
     }
 
     private Key getSignInKey() {
